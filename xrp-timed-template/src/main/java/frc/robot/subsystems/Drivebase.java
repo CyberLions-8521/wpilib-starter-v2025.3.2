@@ -1,18 +1,7 @@
-package frc.robot;
+package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Encoder;
-
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.xrp.XRPGyro;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
-import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
-import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
-import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
-import edu.wpi.first.wpilibj.xrp.XRPServo;
-import frc.robot.VexV5Controller;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class Drivebase {
     // motor & encoder attributes - can change
