@@ -5,89 +5,110 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.Encoder;
 
-/**
- * The methods in this class are called automatically corresponding to each mode, as described in
- * the TimedRobot documentation. If you change the name of this class or the package after creating
- * this project, you must also update the Main.java file in the project.
- */
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.xrp.XRPGyro;
+import edu.wpi.first.wpilibj.xrp.XRPMotor;
+import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
+import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
+import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
+import edu.wpi.first.wpilibj.xrp.XRPServo;
+import frc.robot.VexV5Controller;
+// Subsystems
+import frc.robot.subsystems.Drivebase;
+import frc.robot.subsystems.Arm;
+
+
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  Drivebase m_driveBase = new Drivebase();
+  Arm m_servo = new Arm();
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+  private enum Autostate {
+    FORWARD1, TURN1, FORWARD2, TURN2, FORWARD3, TURN3, FORWARD4, TURN4, FORWARD5, DONE
   }
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
+  private Autostate currentState = Autostate.FORWARD1;
+
+  public Robot() {}
+
   @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
+  public void teleopInit()
+  {
+    m_driveBase.getLeftEncoder().setDistancePerPulse(m_driveBase.getdistancePerPulse());
+    m_driveBase.getRightEncoder().setDistancePerPulse(m_driveBase.getdistancePerPulse());
+
+    m_driveBase.restartDistance();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void teleopPeriodic()
+  {   /* 
+      switch (currentState) { // in theory makes a square
+        case FORWARD1:
+                if (m_driveBase.moveForward(10)) {
+                  m_driveBase.restartDistance();
+                  currentState = Autostate.TURN1;
+                }
+                break;
+        case TURN1:
+                if (m_driveBase.rotateRight(4)) {
+                  m_driveBase.restartDistance();
+                  currentState = Autostate.FORWARD2;
+                }
+                break;
+        case FORWARD2:
+                if (m_driveBase.moveForward(10)) {
+                  m_driveBase.restartDistance();
+                  currentState = Autostate.TURN2;
+                }
+                break;
+        case TURN2:
+                if (m_driveBase.rotateRight(4)) {
+                  m_driveBase.restartDistance();
+                  currentState = Autostate.FORWARD3;
+                }
+                break;
+        case FORWARD3:
+                if (m_driveBase.moveForward(10)) {
+                  m_driveBase.restartDistance();
+                  currentState = Autostate.TURN3;
+                }
+                break;
+        case TURN3:
+              if (m_driveBase.rotateRight(4)) {
+                m_driveBase.restartDistance();
+                currentState = Autostate.FORWARD4;
+              }
+              break;
+        case FORWARD4:
+              if (m_driveBase.moveForward(10)) {
+                m_driveBase.restartDistance();
+                currentState = Autostate.TURN4;
+              }
+              break;
+        case TURN4:
+              if (m_driveBase.rotateRight(4)) {
+                m_driveBase.restartDistance();
+                currentState = Autostate.FORWARD5;
+              }
+              break;
+        case FORWARD5:
+              if (m_driveBase.moveForward(10)) {
+                m_driveBase.restartDistance();
+                currentState = Autostate.DONE;
+              }
+        case DONE:
+              m_driveBase.stopAllMotor();
+              break;
+      }
+      */
+      
+      m_servo.getServo().setPosition(0);
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
     }
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {}
-
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
-
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {}
-
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
 }

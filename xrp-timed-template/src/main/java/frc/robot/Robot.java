@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   private Encoder leftEncoder = new Encoder(4,5);
   private Encoder rightEncoder = new Encoder(6,7);
   
-  private XRPGyro Gyro = new XRPGyro();
+  private XRPGyro gyro = new XRPGyro();
 
   private double wheelDiameter = 2.3622;
   private double trackWidth = 6.1;
@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
   private double avgDistance;
   private double GyroAngleZ;
   private double speed = 0.5;
+  private double turnDistance;
 
   private enum Autostate {
     FORWARD1, TURN1, FORWARD2, TURN2, FORWARD3, TURN3, FORWARD4, TURN4, FORWARD5, DONE
@@ -73,9 +74,10 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public boolean rotateRight(double d) { // command's rotation ratio is 5 inches (2:1 ratio )
+  public boolean rotateRight(double d) { // figured out the turn distance
     avgDistance = ((Math.abs(leftEncoder.getDistance()) + Math.abs(rightEncoder.getDistance())) / 2 );
-  if ( avgDistance >= d) {
+    turnDistance = π * trackWidth  *( d / 360)
+  if ( avgDistance >= turnDistance) {
     stopAllMotor();
     return true;
   } else {
@@ -85,15 +87,22 @@ public class Robot extends TimedRobot {
   }
   }
 
-  public boolean rotateLeft(double d) { // command's rotation ratio is 5 inches
+  public boolean rotateLeft(double d) { // Figured out the math for turnDistance
       avgDistance = ((Math.abs(leftEncoder.getDistance()) + Math.abs(rightEncoder.getDistance())) / 2 );
-    if ( avgDistance >= d) {
+      turnDistance = π * trackWidth  *( d / 360);
+    if ( avgDistance >= turnDistance) {
       stopAllMotor();
       return true;
     } else {
       rmotor.set(speed);
       lmotor.set(-speed);
       return false;
+    }
+  }
+  public boolean rotateGyroLeft(double a) { // Uses Gyro but its inconsistant
+    GyroAngleZ = gyro.GyroAngleZ();
+    if(GyroAngleZ >= a ) {
+      
     }
   }
 
@@ -106,11 +115,9 @@ public class Robot extends TimedRobot {
     restartDistance();
   }
 
-
-  @Override
-  public void teleopPeriodic()
+  public void autonomousPeriodic() 
   {
-      switch (currentState) { // in theory makes a square
+     switch (currentState) { // in theory makes a square
         case FORWARD1:
                 if (moveForward(10)) {
                   restartDistance();
@@ -118,7 +125,7 @@ public class Robot extends TimedRobot {
                 }
                 break;
         case TURN1:
-                if (rotateRight(4)) {
+                if (rotateRight(90)) {
                   restartDistance();
                   currentState = Autostate.FORWARD2;
                 }
@@ -130,7 +137,7 @@ public class Robot extends TimedRobot {
                 }
                 break;
         case TURN2:
-                if (rotateRight(4)) {
+                if (rotateRight(90)) {
                   restartDistance();
                   currentState = Autostate.FORWARD3;
                 }
@@ -142,7 +149,7 @@ public class Robot extends TimedRobot {
                 }
                 break;
         case TURN3:
-              if (rotateRight(4)) {
+              if (rotateRight(90)) {
                 restartDistance();
                 currentState = Autostate.FORWARD4;
               }
@@ -154,7 +161,7 @@ public class Robot extends TimedRobot {
               }
               break;
         case TURN4:
-              if (rotateRight(4)) {
+              if (rotateRight(90)) {
                 restartDistance();
                 currentState = Autostate.FORWARD5;
               }
@@ -164,10 +171,15 @@ public class Robot extends TimedRobot {
                 restartDistance();
                 currentState = Autostate.DONE;
               }
+              break;
         case DONE:
               stopAllMotor();
               break;
       }
-  
-    }
+  }
+  @Override
+  public void teleopPeriodic()
+  {
+
+  }
 }
