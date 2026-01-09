@@ -14,48 +14,31 @@ import edu.wpi.first.wpilibj.xrp.XRPMotor;
 import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
 import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
 import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
-import edu.wpi.first.wpilibj.xrp.XRPServo;
 import frc.robot.VexV5Controller;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.xrp.XRPServo;
 
-import frc.robot.subsystems.Drivebase;
-import frc.robot.subsystems.Arm;
+import frc.robot.Subsystems.Drivebase;
+import frc.robot.Subsystems.Arm;
 
 public class Robot extends TimedRobot {
   Drivebase m_driveBase = new Drivebase();
   Arm m_Arm = new Arm();
+  //These make a copy of the subsystems that are able to be used
+
   @Override
   public void teleopInit(){ 
-
-    // type code in here - runs once
-    m_driveBase.getLeftEncoder().setDistancePerPulse(m_driveBase.getDistancePerPulse());
-    m_driveBase.getRightEncoder().setDistancePerPulse(m_driveBase.getDistancePerPulse());
-    // sets distance per pulse (tick) to the given value for distancePerPulse
     
-    m_driveBase.getLeftEncoder().reset();
-    m_driveBase.getRightEncoder().reset();
-    // reset it so distance doesn't save between on/off periods
+    m_driveBase.resetEncoders();
+    /* m_driveBase is a copy of Drivebase (makes it public, not private)
+    resetEncoders is a function within Drivebase - it is being called*/
   }
 
   @Override
   public void teleopPeriodic(){
-    m_driveBase.getLeftMotor().set(.5);
-    m_driveBase.getRightMotor().set(.5);
 
-    if (((m_driveBase.getLeftEncoder().getDistance() + m_driveBase.getRightEncoder().getDistance()) / 2 ) > 10) {
-      m_driveBase.getLeftMotor().stopMotor();
-      m_driveBase.getRightMotor().stopMotor();
-    }
+    /*m_driveBase.driveForward();
+    m_driveBase.driveForwardAmount(10);*/
 
-    if (getPosition() = 0){
-      m_Arm.getServo().setPosition(1);
-
-    }
-
-    if (m_Arm.getPosition() = 1){
-      m_Arm.getServo().setPosition(0);
-    }
+    m_Arm.upAndDown();
   }
 
 

@@ -2,62 +2,67 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot;
 
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.TimedRobot;
+
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.xrp.XRPGyro;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
+import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
+import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
+import frc.robot.VexV5Controller;
 
-public class Drivebase extends SubsystemBase {
+import frc.robot.Subsystems.Drivebase;
+import frc.robot.Subsystems.Arm;
 
-  private XRPMotor leftMotor = new XRPMotor(0);
-  private XRPMotor rightMotor = new XRPMotor(1);
-  // sets the instance variables left and right motor to the corresponding motors
-  private Encoder leftEncoder = new Encoder(4,5);
-  private Encoder rightEncoder = new Encoder(6,7);
-  // encoders track distances via revolutions
+public class Robot extends TimedRobot {
+  Drivebase m_driveBase = new Drivebase();
+  Arm m_Arm = new Arm();
+  //These make a copy of the subsystems that are able to be used
 
-  private double wheelDiameter = 2.3622;
-  private double trackWidth = 6.1;
-  private double pulsesPerRev = 585;
-  private double circumference = Math.PI * wheelDiameter;
-  private double distancePerPulse = circumference / pulsesPerRev;
-  // can use "getDistancePerPulse" instead
-  /** Creates a new Drivebase. */
-
-  public void driveForward(double distance) {
-    if (((leftEncoder.getDistance() + rightEncoder.getDistance()) / 2 ) > distance) {
-      leftMotor.stopMotor();
-      rightMotor.stopMotor();
-    }
-  }
-
-  public XRPMotor getLeftMotor(){
-    return leftMotor;
-  }
-
-  public XRPMotor getRightMotor(){
-    return rightMotor;
-  }
-
-  public Encoder getLeftEncoder(){
-    return leftEncoder;
-  }
-
-  public Encoder getRightEncoder(){
-    return rightEncoder;
-  }
-
-  public Drivebase() {
-    rightMotor.setInverted(true);
-  }
-
-  public double getDistancePerPulse(){
-    return distancePerPulse;
+  @Override
+  public void teleopInit(){ 
+    
+    m_driveBase.resetEncoders();
+    /* m_driveBase is a copy of Drivebase (makes it public, not private)
+    resetEncoders is a function within Drivebase - it is being called*/
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void teleopPeriodic(){
+
+    /*m_driveBase.driveForward();
+    m_driveBase.driveForwardAmount(10);*/
+
+    m_Arm.upAndDown();
   }
-}
+
+
+
+
+
+
+
+
+  /* // Optional robot methods - uncomment to use
+  @Override
+  public void robotPeriodic() {}
+  @Override
+  public void autonomousInit() {}
+  @Override
+  public void autonomousPeriodic() {}
+  @Override
+  public void disabledInit() {}
+  @Override
+  public void disabledPeriodic() {}
+  @Override
+  public void testInit() {}
+  @Override
+  public void testPeriodic() {}
+  */
+
+  }
