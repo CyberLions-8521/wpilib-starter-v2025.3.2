@@ -26,6 +26,7 @@ import frc.robot.subsystems.Drivebase;
 
 public class Robot extends TimedRobot {
   Drivebase Ruby = new Drivebase(); 
+  
 
   public Robot() {
   }
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
   {
     Ruby.resetEncoders();
     // type code in here - runs once
+    Ruby.configMotors();
   }
 
 
@@ -43,11 +45,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic()
   {
-    Ruby.driveDist(20); 
-    Ruby.resetEncoders();
-    Ruby.turn(20);
+    Ruby.turn(5);
   }
-
 
 
 

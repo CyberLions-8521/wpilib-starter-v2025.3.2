@@ -45,7 +45,7 @@ public class Drivebase extends SubsystemBase {
   }
   // turn d distance
   public void turn(double d) {
-    if (getAverageDist() <= 10) {
+    if (getAverageDist() <= d) {
       LeftMotor.set(0.5);
       RightMotor.set(-0.5);
     }
@@ -80,5 +80,12 @@ public class Drivebase extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void configMotors() {
+    LeftEncoder.setDistancePerPulse(DistPerPulse);
+    RightEncoder.setDistancePerPulse(DistPerPulse);
+
+    RightMotor.setInverted(true);
   }
 }
