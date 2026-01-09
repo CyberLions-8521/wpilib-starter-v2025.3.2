@@ -10,27 +10,28 @@ import edu.wpi.first.wpilibj.xrp.XRPMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.xrp.XRPServo;
 
-public class Drivebase extends SubsystemBase {
+public class DriveBase extends SubsystemBase {
   // XRPMotor
-  private XRPMotor lmotor = new XRPMotor(0);
-  private XRPMotor rmotor = new XRPMotor(1);
+  private final XRPMotor lmotor = new XRPMotor(0);
+  private final XRPMotor rmotor = new XRPMotor(1);
   // Encoder
-  private Encoder leftEncoder = new Encoder(4,5);
-  private Encoder rightEncoder = new Encoder(6,7);
+  private final Encoder leftEncoder = new Encoder(4,5);
+  private final Encoder rightEncoder = new Encoder(6,7);
   // Gyro
-  private XRPGyro Gyro = new XRPGyro();
+  private final XRPGyro Gyro = new XRPGyro();
   // Wheel Vars
-  private double wheelDiameter = 2.3622;
-  private double trackWidth = 6.1;
-  private double pulsesPerRev = 585;
+  private final double wheelDiameter = 2.3622;
+  private final double trackWidth = 6.1;
+  private final double pulsesPerRev = 585;
   private double circumference = Math.PI * wheelDiameter;
   private double distancePerPulse = circumference / pulsesPerRev;
   // constants
   private double avgDistance;
+  private double TurnDistance;
   private double GyroAngleZ;
   private double speed = 0.5;
 
-  public Drivebase() { rmotor.setInverted(true); }
+  public DriveBase() { rmotor.setInverted(true); }
     // Getters
     public double getdistancePerPulse() { return distancePerPulse; }
     public Encoder getLeftEncoder() { return leftEncoder; }
@@ -52,6 +53,7 @@ public class Drivebase extends SubsystemBase {
     }
     public boolean rotateLeft(double d) { // command's rotation ratio is 5 inches
       avgDistance = ((Math.abs(leftEncoder.getDistance()) + Math.abs(rightEncoder.getDistance())) / 2 );
+      TurnDistance = Math.PI * trackWidth * (d / 360);
     if ( avgDistance >= d) {
       stopAllMotor();
       return true;
@@ -72,6 +74,7 @@ public class Drivebase extends SubsystemBase {
   return false;
     }
   }
+  
 
     
   @Override

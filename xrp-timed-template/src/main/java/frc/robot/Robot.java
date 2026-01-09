@@ -57,9 +57,6 @@ public class Robot extends TimedRobot {
     rmotor.stopMotor();
     lmotor.stopMotor();
   }
-  public void restartGyroDistance() {
-    Gyro.reset();
-  }
 
   public boolean moveForward(double d) { // Forward command is based on inches I believe
     avgDistance = ((leftEncoder.getDistance() + rightEncoder.getDistance()) / 2);
@@ -89,7 +86,6 @@ public class Robot extends TimedRobot {
 
   public boolean rotateLeft(double d) { // Figured out the math for turnDistance
       avgDistance = ((Math.abs(leftEncoder.getDistance()) + Math.abs(rightEncoder.getDistance())) / 2 );
-      turnDistance = π * trackWidth  *( d / 360);
     if ( avgDistance >= turnDistance) {
       stopAllMotor();
       return true;
@@ -97,12 +93,6 @@ public class Robot extends TimedRobot {
       rmotor.set(speed);
       lmotor.set(-speed);
       return false;
-    }
-  }
-  public boolean rotateGyroLeft(double a) { // Uses Gyro but its inconsistant
-    GyroAngleZ = gyro.GyroAngleZ();
-    if(GyroAngleZ >= a ) {
-      
     }
   }
 
