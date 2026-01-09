@@ -14,24 +14,31 @@ import edu.wpi.first.wpilibj.xrp.XRPMotor;
 import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
 import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
 import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
-import edu.wpi.first.wpilibj.xrp.XRPServo;
 import frc.robot.VexV5Controller;
 
+import frc.robot.Subsystems.Drivebase;
+import frc.robot.Subsystems.Arm;
 
 public class Robot extends TimedRobot {
-
-  public Robot() {}
+  Drivebase m_driveBase = new Drivebase();
+  Arm m_Arm = new Arm();
+  //These make a copy of the subsystems that are able to be used
 
   @Override
-  public void teleopInit()
-  {
-    // type code in here - runs once
+  public void teleopInit(){ 
+    
+    m_driveBase.resetEncoders();
+    /* m_driveBase is a copy of Drivebase (makes it public, not private)
+    resetEncoders is a function within Drivebase - it is being called*/
   }
 
   @Override
-  public void teleopPeriodic()
-  {
-    // type code in here - runs forever
+  public void teleopPeriodic(){
+
+    /*m_driveBase.driveForward();
+    m_driveBase.driveForwardAmount(10);*/
+
+    m_Arm.upAndDown();
   }
 
 
@@ -57,4 +64,5 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
   */
-}
+
+  }
