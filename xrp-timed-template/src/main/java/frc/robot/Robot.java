@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
 import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
 import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
 import frc.robot.VexV5Controller;
+import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.Subsystems.Drivebase;
 import frc.robot.Subsystems.Arm;
@@ -22,6 +23,7 @@ import frc.robot.Subsystems.Arm;
 public class Robot extends TimedRobot {
   Drivebase m_driveBase = new Drivebase();
   Arm m_Arm = new Arm();
+  XboxController m_controller = new XboxController(0);
   //These make a copy of the subsystems that are able to be used
 
   @Override
@@ -35,10 +37,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic(){
 
-    /*m_driveBase.driveForward();
-    m_driveBase.driveForwardAmount(10);*/
+    m_driveBase.twoDirectionDrive();
+    // double leftSpeed = -m_controller.getLeftY();
+    // m_driveBase.driveForward(10);
+    // m_driveBase.driveForwardAmount(10);
 
-    m_Arm.upAndDown();
+    // m_Arm.upAndDown();
   }
 
 
