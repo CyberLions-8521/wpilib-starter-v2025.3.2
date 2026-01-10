@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+// This DriveBase is for HardCoded Commands
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -46,22 +46,27 @@ public class DriveBase extends SubsystemBase {
     // moveForwarsd
     public boolean moveForward(double d) { 
       avgDistance = ((leftEncoder.getDistance() + rightEncoder.getDistance()) / 2);
-  
-      if ( avgDistance >= d) { stopAllMotor(); return true; } 
-      else { lmotor.set(speed); rmotor.set(speed); return false; }
+      if ( avgDistance >= d) { 
+          stopAllMotor(); 
+          return true; 
+        } else { 
+          lmotor.set(speed); 
+          rmotor.set(speed); 
+          return false; 
+        }
 
     }
     public boolean rotateLeft(double d) { // command's rotation ratio is 5 inches
       avgDistance = ((Math.abs(leftEncoder.getDistance()) + Math.abs(rightEncoder.getDistance())) / 2 );
       TurnDistance = Math.PI * trackWidth * (d / 360);
     if ( avgDistance >= d) {
-      stopAllMotor();
-      return true;
-    } else {
-      rmotor.set(speed);
-      lmotor.set(-speed);
-      return false;
-    }
+        stopAllMotor();
+        return true;
+      } else {
+        rmotor.set(speed);
+        lmotor.set(-speed);
+        return false;
+      }
   }
   public boolean rotateRight(double d) { // command's rotation ratio is 5 inches
   avgDistance = ((Math.abs(leftEncoder.getDistance()) + Math.abs(rightEncoder.getDistance())) / 2 );
@@ -74,8 +79,6 @@ public class DriveBase extends SubsystemBase {
   return false;
     }
   }
-  
-
     
   @Override
   public void periodic() {
