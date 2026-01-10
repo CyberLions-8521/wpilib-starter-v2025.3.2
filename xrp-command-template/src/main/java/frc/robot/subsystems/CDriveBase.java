@@ -2,15 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 // This CDriveBase is for Command Code
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.xrp.XRPGyro;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.xrp.XRPServo;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 
 public class CDriveBase extends SubsystemBase {
@@ -18,74 +19,74 @@ public class CDriveBase extends SubsystemBase {
   private final XRPMotor m_lmotor = new XRPMotor(0);
   private final XRPMotor m_rmotor = new XRPMotor(1);
   // Encoder
-  private final Encoder m_leftEncoder = new Encoder(4,5);
-  private final Encoder m_rightEncoder = new Encoder(6,7);
+  private final Encoder m_lencoder = new Encoder(4,5);
+  private final Encoder m_rencoder = new Encoder(6,7);
   // Gyro
-  private final XRPGyro m_Gyro = new XRPGyro();
+  private final XRPGyro m_gyro = new XRPGyro();
+
   // Wheel Vars
   private final double wheelDiameter = 2.3622;
   private final double trackWidth = 6.1;
   private final double pulsesPerRev = 585;
-  private final double circumference = Math.PI * wheelDiameter;
-  private final double DPP = circumference / pulsesPerRev;
-  // changable constants
+  private double circumference = Math.PI * wheelDiameter;
+  private double distancePerPulse = circumference / pulsesPerRev;
+  // constants
   private double avgDistance;
-  private double currentAngle;
-  private double abs_speed = 0.5;
-    
-  
-  public CDriveBase() {
+  private double speed;
+
+  public CDriveBase() { 
     m_rmotor.setInverted(true);
 
-    m_rightEncoder.setDistancePerPulse(DPP);
-    m_leftEncoder.setDistancePerPulse(DPP);
+    m_lencoder.setDistancePerPulse(distancePerPulse);
+    m_rencoder.setDistancePerPulse(distancePerPulse);
 
-    resetEncoders();
-    resetGyro();
+    resetEncoder();
+
+  
   }
+  public void resetEncoder() {
+    m_lencoder.reset();
+    m_rencoder.reset();
 
-  public void resetEncoders() {
-    m_rightEncoder.reset();
-    m_leftEncoder.reset();
   }
   public void resetGyro() {
-    m_Gyro.reset();
+    m_gyro.reset();
   }
-  public double getAverageDistance() {
-    return (Math.abs(m_rightEncoder.getDistance()) + Math.abs(m_leftEncoder.getDistance()) / 2.0);
+  public void move(double speed) {
+    m_rmotor.set(speed);
+    m_lmotor.set(speed);
   }
-
-  public void moveForwardbyAmount(double inches) { 
-      avgDistance = ((leftEncoder.getDistance() + rightEncoder.getDistance()) / 2);
-      if ( avgDistance >= inches) { 
-          stopAllMotor();
-        } else { 
-          lmotor.set(speed); 
-          rmotor.set(speed);  
-        }
-    }
-  public void Forward(double speed) {
-      lmotor.set(speed);
-      rmotor.set(speed);
-    }
-  public void Rotate(double AngleZ) {
-      currentAngle = m_Gyro.getAngleZ();
+  public void MotorStop() {
+    m_lmotor.set(0);
+    m_rmotor.set(0);
+  }
+  public void turn(double speed) {
+    m_rmotor.set(-speed);
+    m_lmotor.set(speed);
   }
 
-    public Command DriveForward(double speed) {
-        return new RunCommand( () -> Forward(speed), this );
-    }
-    public Command DriveTurn(double degrees) { 
-        return new RunCommand( () -> Rotation(abs_speed,), this);
-    }
 
-    public Command DriveForwardatDistance(double distance) {
-        return new RunCommand( () -> moveForwardbyAmount(distance), this);
-    }
-
-    public Command MotorEnd(){
-
-    }
+  public Command moveCusForwardCommand() {
+    return new RunCommand(() ->  { move(0.5); }, this )
+    .finallyDo(interrupted -> MotorStop());
+  }
+  public Command moveCusReverseCommand() {
+    return new RunCommand( () -> { this.move(-0.5); }, this)
+    .finallyDo(interrupted -> MotorStop());
+  }
+  public Command moveCusRightCommand() {
+    return new RunCommand( () -> { this.turn(0.5); }, this)
+    .finallyDo(interrupted -> MotorStop());
+  }
+  public Command moveCusLeftCommand() {
+    return new RunCommand(() ->  { this.turn(-0.5); }, this)
+    .finallyDo(interrupted -> MotorStop());
+  }
+  public Command getAutonoCommand() {
+    return null;
+  }
   @Override
-  public void periodic() {}
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
 }

@@ -4,20 +4,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 // Subsystems
-import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.Arm;
-import frc.robot.commands.SquareCommand;
-
+import frc.robot.subsystems.CDriveBase;
 
 public class RobotContainer {
-  DriveBase m_driveBase = new DriveBase();
-  Arm m_servo = new Arm();
-  CommandXboxController XController = new CommandXboxController(0);
+  private final CommandXboxController XController = new CommandXboxController(0);
+  private final CDriveBase m_CDriveBase = new CDriveBase();
 
 
   public RobotContainer() {
@@ -27,7 +22,10 @@ public class RobotContainer {
 
 
   private void configureButtonBindings() {
-    XController.a().onTrue(new SquareCommand(m_driveBase));
+    XController.a().whileTrue( m_CDriveBase.moveCusReverseCommand());
+    XController.y().whileTrue(m_CDriveBase.moveCusForwardCommand());
+    XController.x().whileTrue( m_CDriveBase.moveCusLeftCommand());
+    XController.b().whileTrue(m_CDriveBase.moveCusRightCommand());
     /*
     XController.b().onTrue(
       new DriveForward(m_drivebase, 3)
