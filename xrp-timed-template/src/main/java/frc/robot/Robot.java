@@ -1,6 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+//https://8521-cyberlions.gitbook.io/programming-documentation/zero-to-robot-with-xrp/xrp-with-wpilib-2025/xrp-timed-robot-example/encoders-and-autonomous-routines
 
 package frc.robot;
 
@@ -15,14 +16,27 @@ import edu.wpi.first.wpilibj.xrp.XRPOnBoardIO;
 import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
 import edu.wpi.first.wpilibj.xrp.XRPReflectanceSensor;
 import edu.wpi.first.wpilibj.xrp.XRPServo; //same as a motor but can only turn 180 deg
+import edu.wpi.first.wpilibj.Encoder; //checks the rotation of a motor
 import frc.robot.VexV5Controller;
 
 
 public class Robot extends TimedRobot {
+  //class & object defining
   XRPMotor m_leftMotor = new XRPmotor(0); /*creates XRPMotor object*/
   XRPMotor m_rightMotor = new XRPmotor(1); /*creates XRPMotor object*/
+  Encoder m_leftEncoder = new Encoder(4,5); //4 and 5 represent the channels it is being plugged into. some motors like kraken have this built into it
+  Encoder m_rightEncoder = new Encoder(6,7);
   XboxController m_controller = new XboxController(0);
   XRPServo m_servo = new XRPServo(4);
+
+  //variables
+  double wheelDiameter = 2.3622;  // inches
+  double wheelCircumference = wheelDiameter * Math.PI;  // C = pi * D
+  
+  double countsPerWheelRev = 585; // counts per one revolution of the wheel
+  double convFactor = wheelCircumference / countsPerWheelRev;
+
+  
   public Robot() {}
 
   @Override
@@ -51,7 +65,17 @@ public class Robot extends TimedRobot {
   }
 
 
+  @Override
+  public void autonomousInit() {
+    m_leftEncoder.reset(); //resets the encoder's saved value
+    m_rightEncoder.reset();
 
+    m_leftEncoder.setDistancePerPulse(convFactor);
+  }
+  @Override
+  public void autonomousPeriodic() {
+    
+  }
 
 
 
@@ -73,4 +97,4 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
   */
-}
+}        
