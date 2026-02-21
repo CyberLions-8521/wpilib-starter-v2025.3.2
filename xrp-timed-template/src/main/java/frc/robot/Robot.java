@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
     double rightSpeed = -m_controller.getRightY(); //controls how fast the motor based on right joy stick up/down
     
     m_leftMotor.set(leftSpeed);
-    m_leftMotor.set(rightSpeed);
+    m_rightMotor.set(rightSpeed);
 
     if(m_controller.getAButton()) {
       m_servo.setPosition(1.0); //goes to 180 deg/one end + .setAngle(#) can be used to go to a specific angle
@@ -71,10 +71,18 @@ public class Robot extends TimedRobot {
     m_rightEncoder.reset();
 
     m_leftEncoder.setDistancePerPulse(convFactor);
+    m_rightEncoder.setDistancePerPulse(convFactor);
   }
   @Override
   public void autonomousPeriodic() {
-    
+    double avgMeasuredDist = (m_leftEncoder.getDistance() + m_rightEncoder.getDistance())/2
+    if(avgMeasuredDist < 5) {  //5 = 5 inches; it specifically looks for distance so speed does not matter
+      m_leftMotor.set(0.5);
+      m_rightMotor.set(0.5);
+    } else {
+      m_leftMotor.set(0);
+      m_rightMotor.set(0);
+    }
   }
 
 
